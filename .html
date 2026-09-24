@@ -15,83 +15,158 @@ html
             color: #0f0;
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
-            cursor: crosshair;
+            cursor: none;
         }
 
-        /* CRT Flicker Effect */
-        .crt-overlay {
+        #overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        #terminal {
-            padding: 20px;
-            height: 80vh;
-            overflow-y: auto;
-            text-shadow: 0 0 5px #0f0;
-        }
-
-        .danger { color: #ff0000; font-weight: bold; }
-        .warning { color: #ffff00; }
-        .success { color: #00ff00; }
-
-        /* Lockdown Overlay */
-        #lockdown {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            display: none;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100;
-            border: 10px solid #ff0000;
-            box-sizing: border-box;
-        }
-
-        #lockdown h1 {
-            color: #ff0000;
-            font-size: 3rem;
-            text-transform: uppercase;
-            animation: blink 0.5s infinite;
-        }
-
-        .input-area {
-            margin-top: 20px;
             text-align: center;
+        }
+
+        .terminal {
+            width: 80%;
+            height: 60vh;
+            background: #050505;
+            border: 1px solid #0f0;
+            padding: 20px;
+            overflow-y: auto;
+            text-align: left;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            position: relative;
+        }
+
+        .glitch {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 2px 2px #fff;
+            margin-bottom: 20px;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(3px, 1px) rotate(0deg); }
+            70% { transform: translate(-1px, -1px) rotate(1deg); }
+            80% { transform: translate(-3px, 1px) rotate(0deg); }
+            90% { transform: translate(1px, 2px) rotate(-1deg); }
+            100% { transform: translate(1px, -2px) rotate(0deg); }
+        }
+
+        #input-area {
+            margin-top: 20px;
+            color: #0f0;
         }
 
         input {
             background: #000;
-            border: 2px solid #0f0;
             color: #0f0;
-            font-family: 'Courier New', monospace;
-            font-size: 1.5rem;
+            border: 1px solid #0f0;
             padding: 10px;
-            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
             outline: none;
+            text-align: center;
         }
 
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
+        .system-log {
+            color: #00ff00;
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
-    </style>
+
+        .critical {
+            color: #ff0000;
+            font-weight: bold;
+        }
+    }
 </head>
 <body>
 
-    <div class="crt-overlay"></div>
+<div id="overlay">
+    <div class="glitch">SYSTEM COMPROMISED: REMOTE ACCESS GRANTED</div>
     
-    <div id="terminal"></div>
+    <div class="terminal" id="terminal">
+        <div class="system-log"></div>
+    </div>
 
-    <!-- The "Hacked" Lock Screen -->
-    <div id="lockdown">
-        <h1>SYSTEM CRITICAL LOCKDOWN</h1>
-        <p style="color: #fff;">Your kernel has been encrypted. Access restricted.</p>
-        <div class="input-area">
+    <div id="input-area">
+        <p>Enter Decryption Key to Restore Access:</p>
+        <input type="text" id="keyInput" placeholder="XXXX-XXXX-XXXX">
+    </div>
+</div>
+
+<script>
+    const terminal = document.getElementById('terminal');
+    const keyInput = document.getElementById('keyInput');
+    const accessKey = "9676911025";
+
+    const logs = [
+        "Initializing handshake with remote server...",
+        "Bypassing firewall... [DONE]",
+        "Injecting SQL payload into kernel... [SUCCESS]",
+        "Establishing SSH tunnel on port 22...",
+        "Scanning local network for vulnerabilities...",
+        "CRITICAL: Unauthorized access detected in /root/etc/shadow",
+        "Downloading system_registry.hiv... 14%",
+        "Downloading system_registry.hiv... 42%",
+        "Downloading system_registry.hiv... 89%",
+        "DATA EXFILTRATION COMPLETE.",
+        "Encrypting local hard drive (C:/) using AES-256...",
+        "Sectors 0x001 to 0x8FF marked as READ-ONLY.",
+        "ALERT: BIOS integrity check failed.",
+        "Waiting for decryption key from administrator...",
+        "SYSTEM HALT: Please enter the 10-digit override code."
+    ];
+
+    let logIndex = 0;
+
+    function addLog() {
+        if (logIndex < logs.length) {
+            const div = document.createElement('div');
+            div.className = 'system-log';
+            if (logs[logIndex].includes('CRITICAL') || logs[logIndex].includes('ALERT')) {
+                div.className = 'critical';
+            }
+            div.innerText = `[${new Date().toLocaleTimeString()}] ${logs[logIndex]}`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+            logIndex++;
+            setTimeout(addLog, Math.random() * 1500 + 500);
+        }
+    }
+
+    // Handle the "Unlock" logic
+    keyInput.addEventListener('input', (e) => {
+        if (e.target.value === accessKey) {
+            alert("ACCESS GRANTED. System rebooting...");
+            document.body.style.backgroundColor = "white";
+            document.body.innerHTML = "<h1 style='color:black; text-align:center; margin-top:20%'>You have been released. :)</h1>";
+        }
+    });
+
+    // Fake "Prevent Closing" alert
+    window.onbeforeunload = function() {
+        return "Your files are encrypted. Are you sure you want to leave?";
+    };
+
+    // Start the fake process
+    setTimeout(addLog, 1000);
+
+</script>
+</body>
+</html>
