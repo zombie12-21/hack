@@ -1,172 +1,59 @@
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRITICAL_SYSTEM_FAILURE_0x800421</title>
+    <title>Security Awareness Simulation</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            color: #0f0;
+        body {
+            background-color: #0b0c10;
+            color: #66fcf1;
             font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
-            cursor: none;
-        }
-
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 9999;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            height: 100vh;
+            margin: 0;
+            user-select: none;
+        }
+        .container {
             text-align: center;
+            border: 2px solid #1f2833;
+            padding: 40px;
+            background-color: #1f2833;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(102, 252, 241, 0.2);
+            max-width: 600px;
         }
-
-        .terminal {
-            width: 80%;
-            height: 60vh;
-            background: #050505;
-            border: 1px solid #0f0;
-            padding: 20px;
-            overflow-y: auto;
-            text-align: left;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-            position: relative;
-        }
-
-        .glitch {
+        h1 {
+            color: #c5a059;
             font-size: 2rem;
-            font-weight: bold;
-            color: #ff0000;
-            text-shadow: 2px 2px #fff;
             margin-bottom: 20px;
-            animation: shake 0.5s infinite;
         }
-
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(3px, 1px) rotate(0deg); }
-            70% { transform: translate(-1px, -1px) rotate(1deg); }
-            80% { transform: translate(-3px, 1px) rotate(0deg); }
-            90% { transform: translate(1px, 2px) rotate(-1deg); }
-            100% { transform: translate(1px, -2px) rotate(0deg); }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #c5c6c7;
         }
-
-        #input-area {
-            margin-top: 20px;
-            color: #0f0;
-        }
-
-        input {
-            background: #000;
-            color: #0f0;
-            border: 1px solid #0f0;
+        .notice {
+            margin-top: 30px;
             padding: 10px;
-            font-family: 'Courier New', Courier, monospace;
-            outline: none;
-            text-align: center;
-        }
-
-        .system-log {
-            color: #00ff00;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .critical {
-            color: #ff0000;
+            border: 1px dashed #c5a059;
+            color: #c5a059;
             font-weight: bold;
         }
-    }
+    </style>
 </head>
 <body>
 
-<div id="overlay">
-    <div class="glitch">SYSTEM COMPROMISED: REMOTE ACCESS GRANTED</div>
-    
-    <div class="terminal" id="terminal">
-        <div class="system-log"></div>
+    <div class="container">
+        <h1>[ SECURITY SIMULATION ]</h1>
+        <p>This page demonstrates a standard authorized notification layout used during corporate security awareness training.</p>
+        <p>In a real assessment, this placeholder text outlines the scope of the test and provides instructions for reporting the finding to the internal security team.</p>
+        <div class="notice">
+            NOTICE: THIS IS A CONTROLLED EDUCATIONAL ENVIRONMENT. NO DATA HAS BEEN COMPROMISED.
+        </div>
     </div>
 
-    <div id="input-area">
-        <p>Enter Decryption Key to Restore Access:</p>
-        <input type="text" id="keyInput" placeholder="XXXX-XXXX-XXXX">
-    </div>
-</div>
-
-<script>
-    const terminal = document.getElementById('terminal');
-    const keyInput = document.getElementById('keyInput');
-    const accessKey = "9676911025";
-
-    const logs = [
-        "Initializing handshake with remote server...",
-        "Bypassing firewall... [DONE]",
-        "Injecting SQL payload into kernel... [SUCCESS]",
-        "Establishing SSH tunnel on port 22...",
-        "Scanning local network for vulnerabilities...",
-        "CRITICAL: Unauthorized access detected in /root/etc/shadow",
-        "Downloading system_registry.hiv... 14%",
-        "Downloading system_registry.hiv... 42%",
-        "Downloading system_registry.hiv... 89%",
-        "DATA EXFILTRATION COMPLETE.",
-        "Encrypting local hard drive (C:/) using AES-256...",
-        "Sectors 0x001 to 0x8FF marked as READ-ONLY.",
-        "ALERT: BIOS integrity check failed.",
-        "Waiting for decryption key from administrator...",
-        "SYSTEM HALT: Please enter the 10-digit override code."
-    ];
-
-    let logIndex = 0;
-
-    function addLog() {
-        if (logIndex < logs.length) {
-            const div = document.createElement('div');
-            div.className = 'system-log';
-            if (logs[logIndex].includes('CRITICAL') || logs[logIndex].includes('ALERT')) {
-                div.className = 'critical';
-            }
-            div.innerText = `[${new Date().toLocaleTimeString()}] ${logs[logIndex]}`;
-            terminal.appendChild(div);
-            terminal.scrollTop = terminal.scrollHeight;
-            logIndex++;
-            setTimeout(addLog, Math.random() * 1500 + 500);
-        }
-    }
-
-    // Handle the "Unlock" logic
-    keyInput.addEventListener('input', (e) => {
-        if (e.target.value === accessKey) {
-            alert("ACCESS GRANTED. System rebooting...");
-            document.body.style.backgroundColor = "white";
-            document.body.innerHTML = "<h1 style='color:black; text-align:center; margin-top:20%'>You have been released. :)</h1>";
-        }
-    });
-
-    // Fake "Prevent Closing" alert
-    window.onbeforeunload = function() {
-        return "Your files are encrypted. Are you sure you want to leave?";
-    };
-
-    // Start the fake process
-    setTimeout(addLog, 1000);
-
-</script>
 </body>
 </html>
