@@ -1,0 +1,103 @@
+Since modern browsers have security restrictions that prevent a website from "locking" a tab or disabling the close button (to prevent actual malware), the best way to achieve this "troll" effect is to use a **Full-Screen Overlay** and a **Modal Dialogue** that mimics a system crash. 
+
+To make it feel "real," we use a CRT-style flicker effect, a fake terminal sequence, and a "System Lockdown" overlay that blocks the screen until the correct code is entered.
+
+Here is the complete, single-file code:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRITICAL_SYSTEM_FAILURE_0x800421</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+
+        /* CRT Flicker Effect */
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #terminal {
+            padding: 20px;
+            height: 80vh;
+            overflow-y: auto;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        .danger { color: #ff0000; font-weight: bold; }
+        .warning { color: #ffff00; }
+        .success { color: #00ff00; }
+
+        /* Lockdown Overlay */
+        #lockdown {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            border: 10px solid #ff0000;
+            box-sizing: border-box;
+        }
+
+        #lockdown h1 {
+            color: #ff0000;
+            font-size: 3rem;
+            text-transform: uppercase;
+            animation: blink 0.5s infinite;
+        }
+
+        .input-area {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        input {
+            background: #000;
+            border: 2px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            padding: 10px;
+            text-align: center;
+            outline: none;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="crt-overlay"></div>
+    
+    <div id="terminal"></div>
+
+    <!-- The "Hacked" Lock Screen -->
+    <div id="lockdown">
+        <h1>SYSTEM CRITICAL LOCKDOWN</h1>
+        <p style="color: #fff;">Your kernel has been encrypted. Access restricted.</p>
+        <div class="input-area">
